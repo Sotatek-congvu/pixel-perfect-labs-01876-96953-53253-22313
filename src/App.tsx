@@ -11,7 +11,7 @@ import CreateLesson from "./pages/CreateLesson";
 import ConversationPractice from "./pages/ConversationPractice";
 import WritingPractice from "./pages/WritingPractice";
 import VocabularyGroup from "./pages/VocabularyGroup";
-import VocabularyTopics from "./pages/VocabularyTopics";
+
 import FlashcardGroups from "./pages/FlashcardGroups";
 import FlashcardPracticeSelection from "./pages/FlashcardPracticeSelection";
 import FlashcardPractice from "./pages/FlashcardPractice";
@@ -40,7 +40,7 @@ const App = () => (
           <Route path="/create-lesson" element={<CreateLesson />} />
           <Route path="/conversation-practice" element={<ConversationPractice />} />
           <Route path="/writing-practice" element={<WritingPractice />} />
-        <Route path="/vocabulary-topics" element={<VocabularyTopics />} />
+        
         <Route path="/vocabulary-group/:topicId" element={<VocabularyGroup />} />
         <Route path="/flashcard-groups" element={<FlashcardGroups />} />
         <Route path="/flashcard-selection" element={<FlashcardPracticeSelection />} />

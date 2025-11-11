@@ -22,9 +22,24 @@ const CreateLesson = () => {
   const [level, setLevel] = useState(2);
   const [purpose, setPurpose] = useState("communication");
   const [method, setMethod] = useState("ai");
-  const [topic, setTopic] = useState("");
+  const [topicType, setTopicType] = useState("suggested");
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [customTopic, setCustomTopic] = useState("");
   const [manualContent, setManualContent] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const suggestedTopics = [
+    "The Importance of Learning English",
+    "My Favorite Place to Relax",
+    "Technology and Modern Life",
+    "Environmental Protection",
+    "The Benefits of Reading Books",
+    "My Dream Job",
+    "Healthy Lifestyle Habits",
+    "Social Media Impact",
+    "Travel and Cultural Exchange",
+    "Education and Future Career"
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple/10 to-primary/10">
@@ -139,16 +154,53 @@ const CreateLesson = () => {
 
           {/* Topic Selection */}
           {method === "ai" && (
-            <div>
+            <div className="space-y-3">
               <label className="flex items-center gap-2 font-semibold mb-2 text-sm">
                 📚 Chủ đề
               </label>
-              <Textarea
-                placeholder="Nhập chủ đề của bạn... (ví dụ: The Importance of Learning English, My favorite place to relax)"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                className="min-h-[80px]"
-              />
+              
+              <RadioGroup value={topicType} onValueChange={setTopicType} className="grid grid-cols-2 gap-3">
+                <div>
+                  <RadioGroupItem value="suggested" id="suggested" className="peer sr-only" />
+                  <Label
+                    htmlFor="suggested"
+                    className="flex items-center justify-center gap-2 rounded-lg border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer"
+                  >
+                    📋 Chọn từ gợi ý
+                  </Label>
+                </div>
+                <div>
+                  <RadioGroupItem value="custom" id="custom" className="peer sr-only" />
+                  <Label
+                    htmlFor="custom"
+                    className="flex items-center justify-center gap-2 rounded-lg border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 cursor-pointer"
+                  >
+                    ✏️ Tự nhập chủ đề
+                  </Label>
+                </div>
+              </RadioGroup>
+
+              {topicType === "suggested" ? (
+                <Select value={selectedTopic} onValueChange={setSelectedTopic}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn chủ đề..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {suggestedTopics.map((topic) => (
+                      <SelectItem key={topic} value={topic}>
+                        {topic}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Textarea
+                  placeholder="Nhập chủ đề của bạn... (ví dụ: The Importance of Learning English)"
+                  value={customTopic}
+                  onChange={(e) => setCustomTopic(e.target.value)}
+                  className="min-h-[80px]"
+                />
+              )}
             </div>
           )}
 
@@ -171,7 +223,7 @@ const CreateLesson = () => {
           <Button 
             className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground h-12 text-lg font-semibold"
             onClick={handleGenerateTopic}
-            disabled={isGenerating || (method === "ai" && !topic.trim())}
+            disabled={isGenerating || (method === "ai" && topicType === "suggested" && !selectedTopic) || (method === "ai" && topicType === "custom" && !customTopic.trim())}
           >
             {isGenerating ? (
               <>
@@ -189,8 +241,10 @@ const CreateLesson = () => {
   );
 
   async function handleGenerateTopic() {
-    if (method === "ai" && !topic.trim()) {
-      toast.error("Vui lòng nhập chủ đề!");
+    const finalTopic = topicType === "suggested" ? selectedTopic : customTopic;
+    
+    if (method === "ai" && !finalTopic.trim()) {
+      toast.error("Vui lòng chọn hoặc nhập chủ đề!");
       return;
     }
 
@@ -209,7 +263,7 @@ const CreateLesson = () => {
           Language: language === "en" ? "English" : "Vietnamese",
           Level: level,
           Purpose: purposeMap[purpose as keyof typeof purposeMap],
-          Topic: method === "ai" ? topic : manualContent,
+          Topic: method === "ai" ? finalTopic : manualContent,
           CreationMode: "Practice"
         })
       });
