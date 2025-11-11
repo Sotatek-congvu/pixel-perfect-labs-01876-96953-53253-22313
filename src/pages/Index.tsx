@@ -87,19 +87,6 @@ const Index = () => {
             </Card>
           </Link>
 
-          <Link to="/vocabulary-topics" className="group">
-            <Card className="p-8 h-full hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer bg-gradient-to-br from-info/5 to-info/10 border-info/20">
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="p-4 bg-info/10 rounded-full group-hover:bg-info/20 transition-colors">
-                  <BookMarked className="w-12 h-12 text-info" />
-                </div>
-                <h2 className="text-2xl font-bold">Từ Vựng</h2>
-                <p className="text-muted-foreground">
-                  Học từ vựng với flashcard và trò chơi
-                </p>
-              </div>
-            </Card>
-          </Link>
         </div>
 
         <div className="mt-16 text-center">
