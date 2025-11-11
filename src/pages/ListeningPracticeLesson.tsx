@@ -32,6 +32,7 @@ const ListeningPracticeLesson = () => {
     error,
     correctCount,
     attemptedCount,
+    revealedSentences,
     audioRef,
     checkAnswer,
     nextSentence,
@@ -309,10 +310,10 @@ const ListeningPracticeLesson = () => {
                 {!showTranslation ? (
                   <div className="space-y-3">
                     {lesson.sentences.map((sentence, idx) => {
-                      const isRevealed = idx <= currentIndex;
+                      const isRevealed = revealedSentences.has(idx);
                       const isCurrentAndChecked = idx === currentIndex && showResult;
                       const isPastSentence = idx < currentIndex;
-                      const shouldShowTranslation = isPastSentence || isCurrentAndChecked;
+                      const shouldShowTranslation = isRevealed;
                       
                       return (
                         <div key={sentence.sentenceId}>
@@ -346,10 +347,10 @@ const ListeningPracticeLesson = () => {
                 ) : (
                   <div className="space-y-3">
                     {lesson.sentences.map((sentence, idx) => {
-                      const isRevealed = idx <= currentIndex;
+                      const isRevealed = revealedSentences.has(idx);
                       const isCurrentAndChecked = idx === currentIndex && showResult;
                       const isPastSentence = idx < currentIndex;
-                      const shouldShowTranslation = isPastSentence || isCurrentAndChecked;
+                      const shouldShowTranslation = isRevealed;
                       
                       return (
                         <div key={sentence.sentenceId}>

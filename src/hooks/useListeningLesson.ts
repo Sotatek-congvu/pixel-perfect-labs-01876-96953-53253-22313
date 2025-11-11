@@ -21,6 +21,7 @@ export const useListeningLesson = ({
   const [error, setError] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [attemptedCount, setAttemptedCount] = useState(0);
+  const [revealedSentences, setRevealedSentences] = useState<Set<number>>(new Set());
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -122,6 +123,7 @@ export const useListeningLesson = ({
     
     setShowAnswer(!isCorrect);
     setAttemptedCount(prev => prev + 1);
+    setRevealedSentences(prev => new Set(prev).add(currentIndex));
     
     if (isCorrect) {
       setCorrectCount(prev => prev + 1);
@@ -164,8 +166,9 @@ export const useListeningLesson = ({
 
   // Skip current sentence
   const skipSentence = useCallback(() => {
+    setRevealedSentences(prev => new Set(prev).add(currentIndex));
     nextSentence();
-  }, [nextSentence]);
+  }, [currentIndex, nextSentence]);
 
   // Play audio
   const playAudio = useCallback(() => {
@@ -237,6 +240,7 @@ export const useListeningLesson = ({
     error,
     correctCount,
     attemptedCount,
+    revealedSentences,
     audioRef,
     checkAnswer,
     nextSentence,
